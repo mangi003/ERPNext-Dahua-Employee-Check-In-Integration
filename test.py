@@ -17,6 +17,7 @@ def send_to_erpnext(employee_field_value, timestamp, device_id=None, log_type=No
     """
     Example: send_to_erpnext('12349', datetime.datetime.now(), 'HO1', 'IN')
     """
+    # Determine the correct app name dynamically
     endpoint_app = "hrms" if config.ERPNEXT_VERSION > 13 else "erpnext"
     url = f"{config.ERPNEXT_URL}/api/method/{endpoint_app}.hr.doctype.employee_checkin.employee_checkin.add_log_based_on_employee_field"
     
@@ -25,13 +26,11 @@ def send_to_erpnext(employee_field_value, timestamp, device_id=None, log_type=No
         'Accept': 'application/json'
     }
     data = {
-        'employee_field': 'attendance_device_id',  # Dodato polje
         'employee_field_value': employee_field_value,
         'timestamp': timestamp.isoformat(),
         'device_id': device_id,
         'log_type': log_type
     }
-    
     response = requests.post(url, headers=headers, json=data)
     
     if response.status_code == 200:
@@ -43,7 +42,6 @@ def send_to_erpnext(employee_field_value, timestamp, device_id=None, log_type=No
         return response.status_code, error_str
 
 
-# Test funkcija
-send_to_erpnext('HR-EMP-00004', datetime.datetime.now(), 'HO1', 'IN')
-
+# Test the function
+send_to_erpnext('1', datetime.datetime.now(), 'HO1', 'IN')
 
